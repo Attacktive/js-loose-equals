@@ -1,3 +1,9 @@
+const body = document.querySelector("body");
+body.addEventListener("DOMContentLoaded", onBodyLoad);
+
+const runButton = document.querySelector("#button");
+runButton.addEventListener("click", run);
+
 function onBodyLoad() {
 	const footer = document.querySelector("#user-agent");
 	footer.textContent = window.navigator.userAgent;
