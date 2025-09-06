@@ -23,7 +23,7 @@ function onBodyLoad() {
 
 function onInput() {
 	const input = document.querySelector("#input");
-	const button = document.querySelector("#button");
+	const button = document.querySelector("#run");
 
 	if (input.value.length > 0) {
 		button.removeAttribute("disabled");
