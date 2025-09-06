@@ -35,6 +35,13 @@ function run() {
 	const input = document.querySelector("#input");
 	const xEvaluatedTo = document.querySelector("#x-evaluated-to");
 	const output = document.querySelector("#output");
+	const button = document.querySelector("#run");
+	const buttonText = button.querySelector(".button-text");
+	const spinner = button.querySelector(".spinner-border");
+
+	button.disabled = true;
+	buttonText.classList.add("d-none");
+	spinner.classList.remove("d-none");
 
 	const toEval = `x = ${input.value}`;
 	console.debug("toEval", toEval);
@@ -60,15 +67,30 @@ function run() {
 					.map(example => `x == ${format(example)}`)
 					.join("\n");
 			}
+
+			output.classList.add("success");
 		} else {
 			result = `Nothing is loosely equal to ${format(x)}.`;
 		}
+
+		output.classList.remove("error");
 	} catch (error) {
 		console.error(error);
 
 		xEvaluatedTo.textContent = "undefined";
-		result = error.stack;
+		result = error.message || error.stack;
+		output.classList.add("error");
+		output.classList.remove("success");
 	}
 
 	output.textContent = result;
+
+	setTimeout(
+		() => {
+			button.disabled = false;
+			buttonText.classList.remove("d-none");
+			spinner.classList.add("d-none");
+		},
+		100
+	);
 }
