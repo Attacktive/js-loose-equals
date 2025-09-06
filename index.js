@@ -23,11 +23,23 @@ function onBodyLoad() {
 function onInput() {
 	const input = document.querySelector("#input");
 	const button = document.querySelector("#run");
+	const xEvaluatedTo = document.querySelector("#x-evaluated-to");
 
 	if (input.value.length > 0) {
 		button.removeAttribute("disabled");
+
+		const toEval = `x = ${input.value}`;
+		let x = undefined;
+		
+		try {
+			eval(toEval);
+			xEvaluatedTo.textContent = `const x = ${format(x)};`;
+		} catch (error) {
+			xEvaluatedTo.textContent = "Invalid expression";
+		}
 	} else {
 		button.setAttribute("disabled", "");
+		xEvaluatedTo.textContent = "undefined";
 	}
 }
 
