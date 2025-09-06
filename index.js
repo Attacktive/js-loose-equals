@@ -30,7 +30,7 @@ function onInput() {
 
 		const toEval = `x = ${input.value}`;
 		let x = undefined;
-		
+
 		try {
 			eval(toEval);
 			xEvaluatedTo.textContent = `const x = ${format(x)};`;
