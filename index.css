@@ -59,7 +59,7 @@ button#run {
 	cursor: not-allowed;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
 	.d-flex {
 		flex-direction: column;
 	}
