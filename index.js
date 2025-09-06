@@ -18,6 +18,8 @@ function onBodyLoad() {
 			}
 		}
 	);
+
+	onInput();
 }
 
 function onInput() {
