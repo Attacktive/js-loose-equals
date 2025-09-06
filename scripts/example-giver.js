@@ -19,20 +19,20 @@ function giveExamples(x) {
 
 	const type = typeof x;
 	switch (type) {
-		case "undefined":
+		case 'undefined':
 			return {
 				isInfinite: false,
 				examples: [undefined, null]
 			};
-		case "number":
-		case "bigint":
+		case 'number':
+		case 'bigint':
 			return {
 				isInfinite: false,
 				examples: [x, String(x)]
 			};
-		case "boolean":
+		case 'boolean':
 			throw Error(`${x} is another Boolean value other than true or false!?`);
-		case "string": {
+		case 'string': {
 			const parsed = tryParsingToNumber(x);
 			if (parsed) {
 				return {
@@ -46,13 +46,13 @@ function giveExamples(x) {
 				};
 			}
 		}
-		case "object":
+		case 'object':
 			if (Array.isArray(x)) {
 				return handleArray(x);
 			} else {
 				return handleObject(x);
 			}
-		case "symbol":
+		case 'symbol':
 			return handleSymbol(x);
 		default: {
 			// TODO: "function"
@@ -89,37 +89,37 @@ function handleSpecialCases(x) {
 			examples: [
 				false,
 				0,
-				"0",
-				"",
+				'0',
+				'',
 				[],
 				[0],
-				["0"],
+				['0'],
 				[[]],
 				[[0]],
-				[["0"]],
+				[['0']],
 				[[[]]],
 				[[[0]]],
-				[[["0"]]]
+				[[['0']]]
 			]
 		};
 	}
 
-	if (x === "0") {
+	if (x === '0') {
 		// TODO: add objects using String constructor
 		return {
 			isInfinite: true,
 			examples: [
 				false,
 				0,
-				"0",
+				'0',
 				[0],
-				["0"],
+				['0'],
 				[[0]],
-				[["0"]],
+				[['0']],
 				[[[0]]],
-				[[["0"]]],
+				[[['0']]],
 				[[[[0]]]],
-				[[[["0"]]]]
+				[[[['0']]]]
 			]
 		};
 	}
@@ -130,47 +130,47 @@ function handleSpecialCases(x) {
 			examples: [
 				true,
 				1,
-				"1",
+				'1',
 				[1],
-				["1"],
+				['1'],
 				[[1]],
-				[["1"]],
+				[['1']],
 				[[[1]]],
-				[[["1"]]],
+				[[['1']]],
 				[[[[1]]]],
-				[[[["1"]]]]
+				[[[['1']]]]
 			]
 		};
 	}
 
-	if (x === "1") {
+	if (x === '1') {
 		// TODO: add objects using String constructor
 		return {
 			isInfinite: true,
 			examples: [
 				true,
 				1,
-				"1",
+				'1',
 				[1],
-				["1"],
+				['1'],
 				[[1]],
-				[["1"]],
+				[['1']],
 				[[[1]]],
-				[[["1"]]],
+				[[['1']]],
 				[[[[1]]]],
-				[[[["1"]]]]
+				[[[['1']]]]
 			]
 		};
 	}
 
-	if (x === "") {
+	if (x === '') {
 		// TODO: add objects using String constructor
 		return {
 			isInfinite: true,
 			examples: [
 				false,
 				0,
-				"",
+				'',
 				[],
 				[[]],
 				[[[]]],
@@ -192,19 +192,19 @@ function handleArray(array) {
 	if (isNestedEmptyArray(array) || isNumberInNestedArray(0, array)) {
 		return {
 			isInfinite: false,
-			examples: [false, 0, ""]
+			examples: [false, 0, '']
 		};
 	}
 	if (isNumberInNestedArray(0, array)) {
 		return {
 			isInfinite: false,
-			examples: [false, 0, "0"]
+			examples: [false, 0, '0']
 		};
 	}
 	if (isNumberInNestedArray(1, array)) {
 		return {
 			isInfinite: false,
-			examples: [true, 1, "1"]
+			examples: [true, 1, '1']
 		};
 	}
 
@@ -220,12 +220,12 @@ function handleArray(array) {
  */
 function handleObject(object) {
 	const toPrimitive = object[Symbol.toPrimitive];
-	if (typeof toPrimitive === "function") {
+	if (typeof toPrimitive === 'function') {
 		try {
 			const primitive = toPrimitive();
 			return giveExamples(primitive);
 		} catch (error) {
-			console.trace("Failed to invoke Symbol.toPrimitive.", error);
+			console.trace('Failed to invoke Symbol.toPrimitive.', error);
 
 			if (object instanceof Date) {
 				return {
@@ -234,7 +234,7 @@ function handleObject(object) {
 				};
 			}
 
-			// TODO: what else?
+			// anything else?
 		}
 	}
 
