@@ -37,6 +37,8 @@ function onInput() {
 			eval(toEval);
 			xEvaluatedTo.textContent = `const x = ${format(x)};`;
 		} catch (error) {
+			console.error(error);
+
 			xEvaluatedTo.textContent = 'Invalid expression';
 		}
 	} else {
