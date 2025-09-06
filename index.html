@@ -14,20 +14,20 @@
 	<form class="container mt-2">
 		<h2>JavaScript Loose Equals</h2>
 		<h5 class="text-muted">JavaScript == Comparison Tool</h5>
-		<div class="row mt-5 mb-5">
-			<div class="row mt-1">
-				<label for="input" class="form-label">
+		<div class="mt-5 mb-5">
+			<div class="mb-3">
+				<label for="input" class="form-label mb-2">
 					<code>const x =</code>
 				</label>
+				<div class="d-flex gap-2">
+					<textarea id="input" class="form-control flex-grow-1" rows="3" placeholder="Complete assignment by providing a right-hand side expression such as false." aria-label="JavaScript expression to evaluate">false</textarea>
+					<button type="button" id="run" class="btn btn-primary" aria-describedby="input-help">
+						<span class="button-text">Give examples</span>
+						<span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+					</button>
+				</div>
+				<div id="input-help" class="form-text mt-2">Press Ctrl+Enter to run quickly</div>
 			</div>
-			<div class="row mt-1">
-				<textarea id="input" class="col offset-1 form-control" placeholder="Complete assignment by providing a right-hand side expression such as false." aria-label="JavaScript expression to evaluate">false</textarea>
-				<button type="button" id="run" class="offset-1 col-2 btn btn-primary" aria-describedby="input-help">
-					<span class="button-text">Give examples</span>
-					<span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
-				</button>
-			</div>
-			<div id="input-help" class="form-text mt-1">Press Ctrl+Enter to run quickly</div>
 		</div>
 		<div class="row mt-3 mb-3">
 			<p>

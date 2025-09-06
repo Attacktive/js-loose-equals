@@ -17,9 +17,21 @@ footer {
 	background-color: #eeeeee;
 }
 
+button#run {
+	height: 50px;
+}
+
 #input {
 	font-family: var(--bs-font-monospace), serif;
 	font-size: 1.25rem;
+	resize: vertical;
+	min-height: 80px;
+}
+
+.d-flex .btn {
+	min-width: 140px;
+	white-space: nowrap;
+	align-self: flex-end;
 }
 
 #output {
@@ -48,8 +60,13 @@ footer {
 }
 
 @media (max-width: 768px) {
-	#run {
+	.d-flex {
+		flex-direction: column;
+	}
+
+	.d-flex .btn {
 		margin-top: 0.5rem;
+		min-width: auto;
 	}
 
 	form.container {
