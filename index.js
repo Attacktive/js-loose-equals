@@ -1,5 +1,4 @@
-const body = document.querySelector("body");
-body.addEventListener("DOMContentLoaded", onBodyLoad);
+document.addEventListener("DOMContentLoaded", onBodyLoad);
 
 const runButton = document.querySelector("#run");
 runButton.addEventListener("click", run);
