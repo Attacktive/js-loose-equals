@@ -14,13 +14,18 @@
 	<form class="container mt-2">
 		<h2>JavaScript Loose Equals</h2>
 		<h5 class="text-muted">JavaScript == Comparison Tool</h5>
-		<div class="mt-5 mb-5">
+		<div class="mt-4 mb-4">
+			<div class="alert alert-info">
+				<strong>💡 How it works:</strong> JavaScript's loose equality (<code>==</code>) performs type coercion, leading to surprising results.
+				Enter any JavaScript expression below to see what other values are loosely equal to it!
+			</div>
+
 			<div class="mb-3">
 				<label for="input" class="form-label mb-2">
 					<code>const x =</code>
 				</label>
 				<div class="d-flex gap-2">
-					<textarea id="input" class="form-control flex-grow-1" rows="3" placeholder="Complete assignment by providing a right-hand side expression such as false." aria-label="JavaScript expression to evaluate">false</textarea>
+					<textarea id="input" class="form-control flex-grow-1" rows="3" placeholder="Try: false, 0, '', [], null, undefined, '1', [1], or even complex expressions!" aria-label="JavaScript expression to evaluate">false</textarea>
 					<button type="button" id="run" class="btn btn-primary" aria-describedby="input-help">
 						<span class="button-text">Give examples</span>
 						<span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
