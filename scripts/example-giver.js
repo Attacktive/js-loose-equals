@@ -54,9 +54,10 @@ function giveExamples(x) {
 			}
 		case 'symbol':
 			return handleSymbol(x);
+		case 'function':
+			return handleFunction(x);
 		default: {
-			// TODO: "function"
-			const message = `Not implemented for type ${type}.`;
+			const message = `I'm surprised that we have ${type}! 😯😯😯`;
 
 			console.error(message, x);
 			throw Error(message);
@@ -252,6 +253,17 @@ function handleSymbol(symbol) {
 	return {
 		isInfinite: true,
 		examples: generateObjectWrappedArrayUpToNTimes(symbol, 10)
+	};
+}
+
+/**
+ * @param {Function} fn
+ * @returns {Example}
+ */
+function handleFunction(fn) {
+	return {
+		isInfinite: false,
+		examples: [fn]
 	};
 }
 
