@@ -31,7 +31,42 @@
 						<span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
 					</button>
 				</div>
-				<div id="input-help" class="form-text mt-2">Press Ctrl+Enter to run quickly</div>
+				<div id="input-help" class="form-text mt-2">
+					Press Ctrl+Enter to run quickly •
+					<button type="button" class="btn btn-link btn-sm p-0" id="show-examples">Show example inputs</button>
+				</div>
+			</div>
+
+			<div id="example-inputs" class="d-none">
+				<div class="card">
+					<div class="card-header">
+						<h6 class="mb-0">Try these interesting examples:</h6>
+					</div>
+					<div class="card-body">
+						<div class="row">
+							<div class="col-md-6">
+								<strong>Basic values:</strong>
+								<div class="example-buttons">
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="false">false</button>
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="0">0</button>
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="''">''</button>
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="null">null</button>
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="undefined">undefined</button>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<strong>Tricky cases:</strong>
+								<div class="example-buttons">
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="[]">[]</button>
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="[0]">[0]</button>
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="[[]]">[[]]</button>
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="new Date()">new Date()</button>
+									<button class="btn btn-outline-secondary btn-sm me-1 mb-1" data-example="function(){return 42}">function(){return 42}</button>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
 			</div>
 		</div>
 		<div class="row mt-3 mb-3">

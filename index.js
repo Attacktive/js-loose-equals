@@ -8,6 +8,8 @@ function onBodyLoad() {
 	footer.textContent = window.navigator.userAgent;
 
 	const input = document.querySelector('#input');
+	const showExamplesBtn = document.querySelector('#show-examples');
+	const exampleInputs = document.querySelector('#example-inputs');
 
 	input.addEventListener('input', onInput);
 	input.addEventListener(
@@ -19,6 +21,24 @@ function onBodyLoad() {
 		}
 	);
 
+	// Toggle example inputs visibility
+	showExamplesBtn.addEventListener('click', () => {
+		exampleInputs.classList.toggle('d-none');
+		showExamplesBtn.textContent = exampleInputs.classList.contains('d-none')
+			? 'Show example inputs'
+			: 'Hide example inputs';
+	});
+
+	// Handle example button clicks
+	document.addEventListener('click', (event) => {
+		if (event.target.hasAttribute('data-example')) {
+			const example = event.target.getAttribute('data-example');
+			input.value = example;
+			input.focus();
+			onInput();
+		}
+	});
+
 	onInput();
 }
 
@@ -27,19 +47,24 @@ function onInput() {
 	const button = document.querySelector('#run');
 	const xEvaluatedTo = document.querySelector('#x-evaluated-to');
 
-	if (input.value.length > 0) {
+	if (input.value.trim().length > 0) {
 		button.removeAttribute('disabled');
 
 		const toEval = `x = ${input.value}`;
 		let x = undefined;
 
 		try {
+			// Basic validation to prevent dangerous code execution
+			if (input.value.includes('import') || input.value.includes('require') ||
+				input.value.includes('fetch') || input.value.includes('XMLHttpRequest')) {
+				throw new Error('External imports and network requests are not allowed');
+			}
+
 			eval(toEval);
 			xEvaluatedTo.textContent = `const x = ${format(x)};`;
 		} catch (error) {
-			console.error(error);
-
-			xEvaluatedTo.textContent = 'Invalid expression';
+			console.error('Input evaluation error:', error);
+			xEvaluatedTo.textContent = `Invalid expression: ${error.message}`;
 		}
 	} else {
 		button.setAttribute('disabled', '');
@@ -66,6 +91,13 @@ function run() {
 	let result;
 
 	try {
+		// Basic validation to prevent dangerous code execution
+		if (input.value.includes('import') || input.value.includes('require') ||
+			input.value.includes('fetch') || input.value.includes('XMLHttpRequest') ||
+			input.value.includes('document') || input.value.includes('window')) {
+			throw new Error('External imports, network requests, and DOM manipulation are not allowed');
+		}
+
 		eval(toEval);
 
 		xEvaluatedTo.textContent = `const x = ${format(x)};`;
@@ -91,10 +123,10 @@ function run() {
 
 		output.classList.remove('error');
 	} catch (error) {
-		console.error(error);
+		console.error('Execution error:', error);
 
-		xEvaluatedTo.textContent = 'undefined';
-		result = error.message || error.stack;
+		xEvaluatedTo.textContent = 'Error in expression';
+		result = `Error: ${error.message}`;
 		output.classList.add('error');
 		output.classList.remove('success');
 	}
