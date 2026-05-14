@@ -30,7 +30,7 @@ function format(input, n) {
 			}
 
 			if (input instanceof String) {
-				return formatNonPrimitive(input, n, () => `new ${input.constructor.name}("${input})"`);
+				return formatNonPrimitive(input, n, () => `new ${input.constructor.name}("${input}")`);
 			}
 
 			if (input instanceof Date) {

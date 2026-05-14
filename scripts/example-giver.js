@@ -190,29 +190,21 @@ function handleSpecialCases(x) {
  * @return {Example}
  */
 function handleArray(array) {
-	if (isNestedEmptyArray(array) || isNumberInNestedArray(0, array)) {
-		return {
-			isInfinite: false,
-			examples: [false, 0, '']
-		};
-	}
-	if (isNumberInNestedArray(0, array)) {
-		return {
-			isInfinite: false,
-			examples: [false, 0, '0']
-		};
-	}
-	if (isNumberInNestedArray(1, array)) {
-		return {
-			isInfinite: false,
-			examples: [true, 1, '1']
-		};
+	const isInfinite = false;
+
+	if (isNestedEmptyArray(array)) {
+		return { isInfinite, examples: [false, 0, ''] };
 	}
 
-	return {
-		isInfinite: false,
-		examples: []
-	};
+	if (isNumberInNestedArray(0, array)) {
+		return { isInfinite, examples: [false, 0, '0'] };
+	}
+
+	if (isNumberInNestedArray(1, array)) {
+		return { isInfinite, examples: [true, 1, '1'] };
+	}
+
+	return { isInfinite, examples: [] };
 }
 
 /**
