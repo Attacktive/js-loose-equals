@@ -5,57 +5,46 @@
 	<meta name="viewport" content="width=device-width, initial-scale=1">
 	<title>JavaScript Loose Equals</title>
 	<link rel="icon" href="favicon.ico">
-
-	<!-- https://getbootstrap.com/docs/5.3/getting-started/introduction/#quick-start -->
-	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
 	<link rel="stylesheet" href="index.css">
 </head>
 <body>
-	<form class="container mt-2">
-		<h2>JavaScript Loose Equals</h2>
-		<h5 class="text-muted">JavaScript == Comparison Tool</h5>
-		<div class="mt-4 mb-4">
-			<div class="alert alert-info">
-				<strong>💡 How it works:</strong> JavaScript's loose equality (<code>==</code>) performs type coercion, leading to surprising results.
-				Enter any JavaScript expression below to see what other values are loosely equal to it!
-			</div>
+	<div id="app">
+		<header>
+			<h2>JavaScript Loose Equals</h2>
+			<p class="subtitle">JavaScript == Comparison Tool</p>
+		</header>
 
-			<div class="mb-3">
-				<label for="input" class="form-label mb-2">
-					<code>const x =</code>
-				</label>
-				<div class="d-flex gap-2">
-					<textarea id="input" class="form-control flex-grow-1" rows="3" placeholder="Try: false, 0, '', [], null, undefined, '1', [1], or even complex expressions!" aria-label="JavaScript expression to evaluate">false</textarea>
-					<button type="button" id="run" class="btn btn-primary" aria-describedby="input-help">
+		<details class="info-box" open>
+			<summary><strong>💡 How it works</strong></summary>
+			<p>JavaScript's loose equality (<code>==</code>) performs type coercion, leading to surprising results. Enter any JavaScript expression to see what other values are loosely equal to it.</p>
+		</details>
+
+		<div class="workspace">
+			<section class="input-panel">
+				<label for="input">const x =</label>
+				<textarea id="input" rows="4" placeholder="Try: false, 0, '', [], null, undefined, '1', [1], or even complex expressions!" aria-label="JavaScript expression to evaluate" aria-describedby="input-help">false</textarea>
+				<div class="input-controls">
+					<span id="input-help" class="hint">Ctrl+Enter to run</span>
+					<button type="button" id="run">
 						<span class="button-text">Give examples</span>
-						<span class="spinner-border spinner-border-sm d-none" role="status" aria-hidden="true"></span>
+						<span class="spinner hidden" role="status" aria-hidden="true"></span>
 					</button>
 				</div>
-				<div id="input-help" class="form-text mt-2">Press Ctrl+Enter to run quickly</div>
-			</div>
+				<label for="x-evaluated-to" class="hint">Evaluated as:</label>
+				<pre class="evaluated"><code id="x-evaluated-to">undefined</code></pre>
+			</section>
+
+			<section class="output-panel">
+				<p>The following are also true:</p>
+				<pre id="output" aria-live="polite"></pre>
+			</section>
 		</div>
-		<div class="row mt-3 mb-3">
-			<p>
-				The expression is evaluated as:
-			</p>
-			<div class="row mt-1">
-				<code id="x-evaluated-to">undefined</code>
-			</div>
-		</div>
-		<hr>
+	</div>
 
-		<div class="row mt-5">
-			<label for="output" class="form-label">The following statements are also <code>true</code>:</label>
-		</div>
+	<footer role="contentinfo">
+		<div id="user-agent" aria-label="User agent information"></div>
+	</footer>
 
-		<pre id="output" class="row m-1 p-2" aria-live="polite"></pre>
-
-		<footer class="row fixed-bottom pt-1 pe-2 pb-1 text-end" role="contentinfo">
-			<div id="user-agent" class="col-12" aria-label="User agent information"></div>
-		</footer>
-	</form>
-
-	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js" integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI" crossorigin="anonymous"></script>
 	<script src="index.js"></script>
 	<script src="scripts/example-giver.js"></script>
 	<script src="scripts/formatter.js"></script>

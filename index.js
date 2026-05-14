@@ -53,11 +53,11 @@ function run() {
 	const output = document.querySelector('#output');
 	const button = document.querySelector('#run');
 	const buttonText = button.querySelector('.button-text');
-	const spinner = button.querySelector('.spinner-border');
+	const spinner = button.querySelector('.spinner');
 
 	button.disabled = true;
-	buttonText.classList.add('d-none');
-	spinner.classList.remove('d-none');
+	buttonText.classList.add('hidden');
+	spinner.classList.remove('hidden');
 
 	const toEval = `x = ${input.value}`;
 	console.debug('toEval', toEval);
@@ -104,8 +104,8 @@ function run() {
 	setTimeout(
 		() => {
 			button.disabled = false;
-			buttonText.classList.remove('d-none');
-			spinner.classList.add('d-none');
+			buttonText.classList.remove('hidden');
+			spinner.classList.add('hidden');
 		},
 		100
 	);
