@@ -196,11 +196,11 @@ function handleArray(array) {
 		return { isInfinite, examples: [false, 0, ''] };
 	}
 
-	if (isNumberInNestedArray(0, array)) {
+	if (isNestedSingletonOf(0, array)) {
 		return { isInfinite, examples: [false, 0, '0'] };
 	}
 
-	if (isNumberInNestedArray(1, array)) {
+	if (isNestedSingletonOf(1, array)) {
 		return { isInfinite, examples: [true, 1, '1'] };
 	}
 
@@ -301,14 +301,14 @@ function isNestedEmptyArray(array) {
  * @param {Array} array
  * @return {boolean}
  */
-function isNumberInNestedArray(target, array) {
+function isNestedSingletonOf(target, array) {
 	if (array.length !== 1) {
 		return false;
 	}
 
 	const theOnlyElement = array[0];
 	if (Array.isArray(theOnlyElement)) {
-		return isNumberInNestedArray(target, theOnlyElement);
+		return isNestedSingletonOf(target, theOnlyElement);
 	} else {
 		let parsed = parseFloat(theOnlyElement);
 		return (parsed === target);
