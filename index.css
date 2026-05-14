@@ -11,7 +11,7 @@ body {
 }
 
 code {
-	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
 	font-size: 0.875em;
 	background: #e9ecef;
 	border-radius: 0.2em;
@@ -81,12 +81,12 @@ h2 {
 }
 
 .input-panel label {
-	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
 	font-size: 1rem;
 }
 
 #input {
-	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
 	font-size: 0.95rem;
 	resize: vertical;
 	min-height: 100px;
@@ -100,7 +100,7 @@ h2 {
 #input:focus {
 	outline: none;
 	border-color: #86b7fe;
-	box-shadow: 0 0 0 3px rgba(13, 110, 253, 0.2);
+	box-shadow: 0 0 0 3px rgb(13 110 253 / 20%);
 }
 
 .input-controls {
@@ -139,7 +139,7 @@ h2 {
 .spinner {
 	width: 0.85rem;
 	height: 0.85rem;
-	border: 0.15em solid currentColor;
+	border: 0.15em solid currentcolor;
 	border-right-color: transparent;
 	border-radius: 50%;
 	animation: spin 0.75s linear infinite;
@@ -159,7 +159,7 @@ h2 {
 	background: #e9ecef;
 	border: 1px solid #ced4da;
 	border-radius: 0.375rem;
-	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
 	font-size: 0.95rem;
 	color: #495057;
 	min-height: 2.5rem;
@@ -179,7 +179,7 @@ h2 {
 	background: #fff;
 	border: 1px solid #ced4da;
 	border-radius: 0.375rem;
-	font-family: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+	font-family: SFMono-Regular, Consolas, "Liberation Mono", Menlo, monospace;
 	font-size: 0.95rem;
 	transition: background 0.15s, border-color 0.15s, color 0.15s;
 }
@@ -208,7 +208,7 @@ footer {
 	text-align: right;
 }
 
-@media (max-width: 768px) {
+@media (width <= 768px) {
 	.workspace {
 		grid-template-columns: 1fr;
 	}
