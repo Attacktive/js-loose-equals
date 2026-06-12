@@ -66,7 +66,5 @@ function formatNonPrimitive(any, n, representation) {
 		formatted += ")";
 	}
 
-	formatted += ";";
-
 	return formatted;
 }
