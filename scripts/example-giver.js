@@ -34,7 +34,7 @@ function giveExamples(x) {
 			throw Error(`${x} is another Boolean value other than true or false!?`);
 		case 'string': {
 			const parsed = tryParsingToNumber(x);
-			if (parsed) {
+			if (parsed !== undefined) {
 				return {
 					isInfinite: true,
 					examples: [x, parsed].concat(generateWrappedArrayUpToNTimes(x, 10, String))
@@ -264,17 +264,12 @@ function handleFunction(fn) {
  * @return {undefined|number}
  */
 function tryParsingToNumber(string) {
-	let parsed = parseInt(string, 10);
-	if (Number.isInteger(parsed)) {
-		return parsed;
+	const parsed = Number(string);
+	if (Number.isNaN(parsed)) {
+		return undefined;
 	}
 
-	parsed = parseFloat(string);
-	if (Number.isFinite(parsed)) {
-		return parsed;
-	}
-
-	return undefined;
+	return parsed;
 }
 
 /**
@@ -310,7 +305,7 @@ function isNestedSingletonOf(target, array) {
 	if (Array.isArray(theOnlyElement)) {
 		return isNestedSingletonOf(target, theOnlyElement);
 	} else {
-		let parsed = parseFloat(theOnlyElement);
+		const parsed = Number(theOnlyElement);
 		return (parsed === target);
 	}
 }
