@@ -1,13 +1,17 @@
 document.addEventListener('DOMContentLoaded', onBodyLoad);
 
+const input = document.querySelector('#input');
+const xEvaluatedTo = document.querySelector('#x-evaluated-to');
+const output = document.querySelector('#output');
 const runButton = document.querySelector('#run');
+const buttonText = runButton.querySelector('.button-text');
+const spinner = runButton.querySelector('.spinner');
+
 runButton.addEventListener('click', run);
 
 function onBodyLoad() {
 	const footer = document.querySelector('#user-agent');
 	footer.textContent = window.navigator.userAgent;
-
-	const input = document.querySelector('#input');
 
 	input.addEventListener('input', onInput);
 	input.addEventListener(
@@ -22,54 +26,48 @@ function onBodyLoad() {
 	onInput();
 }
 
+/**
+ * Evaluates the input as `x` and reflects it into #x-evaluated-to; throws when the input is not a valid expression.
+ * @return {*} the evaluated value
+ */
+function evaluateInput() {
+	const toEval = `x = ${input.value}`;
+	console.debug('toEval', toEval);
+
+	let x = undefined;
+	eval(toEval);
+
+	xEvaluatedTo.textContent = `const x = ${format(x)};`;
+
+	return x;
+}
+
 function onInput() {
-	const input = document.querySelector('#input');
-	const button = document.querySelector('#run');
-	const xEvaluatedTo = document.querySelector('#x-evaluated-to');
-
 	if (input.value.length > 0) {
-		button.removeAttribute('disabled');
-
-		const toEval = `x = ${input.value}`;
-		let x = undefined;
+		runButton.removeAttribute('disabled');
 
 		try {
-			eval(toEval);
-			xEvaluatedTo.textContent = `const x = ${format(x)};`;
+			evaluateInput();
 		} catch (error) {
 			console.error(error);
 
 			xEvaluatedTo.textContent = 'Invalid expression';
 		}
 	} else {
-		button.setAttribute('disabled', '');
+		runButton.setAttribute('disabled', '');
 		xEvaluatedTo.textContent = 'undefined';
 	}
 }
 
 function run() {
-	const input = document.querySelector('#input');
-	const xEvaluatedTo = document.querySelector('#x-evaluated-to');
-	const output = document.querySelector('#output');
-	const button = document.querySelector('#run');
-	const buttonText = button.querySelector('.button-text');
-	const spinner = button.querySelector('.spinner');
-
-	button.disabled = true;
+	runButton.disabled = true;
 	buttonText.classList.add('hidden');
 	spinner.classList.remove('hidden');
 
-	const toEval = `x = ${input.value}`;
-	console.debug('toEval', toEval);
-
-	let x = undefined;
 	let result;
 
 	try {
-		eval(toEval);
-
-		xEvaluatedTo.textContent = `const x = ${format(x)};`;
-
+		const x = evaluateInput();
 		const { isInfinite, examples } = giveExamples(x);
 
 		if (examples.length > 0) {
@@ -100,7 +98,7 @@ function run() {
 
 	setTimeout(
 		() => {
-			button.disabled = false;
+			runButton.disabled = false;
 			buttonText.classList.remove('hidden');
 			spinner.classList.add('hidden');
 		},
