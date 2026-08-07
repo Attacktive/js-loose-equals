@@ -1,8 +1,15 @@
 /**
+ * @typedef ExampleEntry
+ * @type {Object}
+ * @property {*} value
+ * @property {number} depth how many Object(…) layers to render around the value's own representation
+ */
+
+/**
  * @typedef Example
  * @type {Object}
  * @property {boolean} isInfinite
- * @property {Array} examples
+ * @property {Array<ExampleEntry>} examples
  */
 
 /**
@@ -22,29 +29,31 @@ function giveExamples(x) {
 		case 'undefined':
 			return {
 				isInfinite: false,
-				examples: [undefined, null]
+				examples: toPlainExamples([undefined, null])
 			};
 		case 'number':
 		case 'bigint':
 			return {
 				isInfinite: false,
-				examples: [x, String(x)]
+				examples: toPlainExamples([x, String(x)])
 			};
 		case 'boolean':
 			throw Error(`${x} is another Boolean value other than true or false!?`);
 		case 'string': {
 			const parsed = tryParsingToNumber(x);
+			const plainValues = [x];
+
 			if (parsed !== undefined) {
-				return {
-					isInfinite: true,
-					examples: [x, parsed].concat(generateWrappedArrayUpToNTimes(x, 10, String))
-				};
-			} else {
-				return {
-					isInfinite: true,
-					examples: [x].concat(generateWrappedArrayUpToNTimes(x, 10, String))
-				};
+				plainValues.push(parsed);
 			}
+
+			const examples = toPlainExamples(plainValues)
+				.concat(generateWrapperExamples(x, 0, 9));
+
+			return {
+				isInfinite: true,
+				examples
+			};
 		}
 		case 'object':
 			if (Array.isArray(x)) {
@@ -80,14 +89,14 @@ function handleSpecialCases(x) {
 	if (x === null) {
 		return {
 			isInfinite: false,
-			examples: [undefined, null]
+			examples: toPlainExamples([undefined, null])
 		};
 	}
 
 	if (x === false || x === 0) {
 		return {
 			isInfinite: true,
-			examples: [
+			examples: toPlainExamples([
 				false,
 				0,
 				'0',
@@ -101,34 +110,36 @@ function handleSpecialCases(x) {
 				[[[]]],
 				[[[0]]],
 				[[['0']]]
-			]
+			])
 		};
 	}
 
 	if (x === '0') {
-		// TODO: add objects using String constructor
+		const examples = toPlainExamples([
+			false,
+			0,
+			'0',
+			[0],
+			['0'],
+			[[0]],
+			[['0']],
+			[[[0]]],
+			[[['0']]],
+			[[[[0]]]],
+			[[[['0']]]]
+		])
+			.concat(generateWrapperExamples(x, 0, 2));
+
 		return {
 			isInfinite: true,
-			examples: [
-				false,
-				0,
-				'0',
-				[0],
-				['0'],
-				[[0]],
-				[['0']],
-				[[[0]]],
-				[[['0']]],
-				[[[[0]]]],
-				[[[['0']]]]
-			]
+			examples
 		};
 	}
 
 	if (x === true || x === 1) {
 		return {
 			isInfinite: true,
-			examples: [
+			examples: toPlainExamples([
 				true,
 				1,
 				'1',
@@ -140,47 +151,51 @@ function handleSpecialCases(x) {
 				[[['1']]],
 				[[[[1]]]],
 				[[[['1']]]]
-			]
+			])
 		};
 	}
 
 	if (x === '1') {
-		// TODO: add objects using String constructor
+		const examples = toPlainExamples([
+			true,
+			1,
+			'1',
+			[1],
+			['1'],
+			[[1]],
+			[['1']],
+			[[[1]]],
+			[[['1']]],
+			[[[[1]]]],
+			[[[['1']]]]
+		])
+			.concat(generateWrapperExamples(x, 0, 2));
+
 		return {
 			isInfinite: true,
-			examples: [
-				true,
-				1,
-				'1',
-				[1],
-				['1'],
-				[[1]],
-				[['1']],
-				[[[1]]],
-				[[['1']]],
-				[[[[1]]]],
-				[[[['1']]]]
-			]
+			examples
 		};
 	}
 
 	if (x === '') {
-		// TODO: add objects using String constructor
+		const examples = toPlainExamples([
+			false,
+			0,
+			'',
+			[],
+			[[]],
+			[[[]]],
+			[[[[]]]],
+			[[[[[]]]]],
+			[[[[[[]]]]]],
+			[[[[[[[]]]]]]],
+			[[[[[[[[]]]]]]]]
+		])
+			.concat(generateWrapperExamples(x, 0, 2));
+
 		return {
 			isInfinite: true,
-			examples: [
-				false,
-				0,
-				'',
-				[],
-				[[]],
-				[[[]]],
-				[[[[]]]],
-				[[[[[]]]]],
-				[[[[[[]]]]]],
-				[[[[[[[]]]]]]],
-				[[[[[[[[]]]]]]]]
-			]
+			examples
 		};
 	}
 }
@@ -193,23 +208,23 @@ function handleSpecialCases(x) {
 function handleArray(array) {
 	const string = String(array);
 	const parsed = tryParsingToNumber(string);
-	const examples = [];
+	const values = [];
 
 	if (parsed === 0) {
-		examples.push(false);
+		values.push(false);
 	} else if (parsed === 1) {
-		examples.push(true);
+		values.push(true);
 	}
 
 	if (parsed !== undefined) {
-		examples.push(parsed);
+		values.push(parsed);
 	}
 
-	examples.push(string);
+	values.push(string);
 
 	return {
 		isInfinite: false,
-		examples
+		examples: toPlainExamples(values)
 	};
 }
 
@@ -241,10 +256,12 @@ function handleObject(object) {
 	}
 
 	const { examples } = giveExamples(primitive);
+	const values = examples.map(({ value }) => value);
+	const primitiveValues = [...new Set(values)].filter(isPrimitive);
 
 	return {
 		isInfinite: false,
-		examples: [...new Set(examples.filter(isPrimitive))]
+		examples: toPlainExamples(primitiveValues)
 	};
 }
 
@@ -253,9 +270,12 @@ function handleObject(object) {
  * @return {Example}
  */
 function handleSymbol(symbol) {
+	const examples = toPlainExamples([symbol])
+		.concat(generateWrapperExamples(symbol, 1, 10));
+
 	return {
 		isInfinite: true,
-		examples: generateObjectWrappedArrayUpToNTimes(symbol, 10)
+		examples
 	};
 }
 
@@ -266,7 +286,7 @@ function handleSymbol(symbol) {
 function handleFunction(fn) {
 	return {
 		isInfinite: false,
-		examples: [fn]
+		examples: toPlainExamples([fn])
 	};
 }
 
@@ -322,55 +342,27 @@ function isPrimitive(any) {
 }
 
 /**
- * @param any
- * @param {number} n
- * @param constructor
- * @return {Array}
+ * @param {Array} values
+ * @return {Array<ExampleEntry>}
  */
-function generateWrappedArrayUpToNTimes(any, n, constructor) {
-	const array = [];
-
-	for (let i = 0; i <= n; i++) {
-		array.push(wrapWithConstructorNTimes(any, i, constructor));
-	}
-
-	return array;
+function toPlainExamples(values) {
+	return values.map((value) => ({ value, depth: 0 }));
 }
 
 /**
+ * A single Object() call produces the wrapper for every depth: wrapping the wrapper again would return the very same object, so only the rendered depth grows.
  * @param any
- * @param {number} n
- * @param {Function} constructor
- * @return {*|Object}
+ * @param {number} from
+ * @param {number} to
+ * @return {Array<ExampleEntry>}
  */
-function wrapWithConstructorNTimes(any, n, constructor) {
-	if (n === 0) {
-		return any;
+function generateWrapperExamples(any, from, to) {
+	const wrapper = Object(any);
+	const examples = [];
+
+	for (let depth = from; depth <= to; depth++) {
+		examples.push({ value: wrapper, depth });
 	}
 
-	const wrapped = constructor(any);
-
-	if (n === 1) {
-		return wrapped;
-	}
-
-	return wrapWithObjectNTimes(wrapped, n - 1);
-}
-
-/**
- * @param any
- * @param {number} n
- * @return {Array}
- */
-function generateObjectWrappedArrayUpToNTimes(any, n) {
-	return generateWrappedArrayUpToNTimes(any, n, Object);
-}
-
-/**
- * @param any
- * @param {number} n
- * @return {*|Object}
- */
-function wrapWithObjectNTimes(any, n) {
-	return wrapWithConstructorNTimes(any, n, Object);
+	return examples;
 }

@@ -73,15 +73,12 @@ function run() {
 		const { isInfinite, examples } = giveExamples(x);
 
 		if (examples.length > 0) {
+			result = examples
+				.map(({ value, depth }) => `x == ${format(value, depth)}`)
+				.join('\n');
+
 			if (isInfinite) {
-				result = examples
-					.map((example, index) => `x == ${format(example, index)}`)
-					.join('\n')
-					.concat('\n…');
-			} else {
-				result = examples
-					.map(example => `x == ${format(example)}`)
-					.join('\n');
+				result = result.concat('\n…');
 			}
 
 			output.classList.add('success');
