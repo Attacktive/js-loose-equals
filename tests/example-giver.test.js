@@ -124,3 +124,94 @@ test(
 		}
 	}
 );
+
+test(
+	'a plain object is equated with "[object Object]"',
+	() => {
+		const { examples } = giveExamples({});
+
+		assert.ok(examples.includes('[object Object]'));
+	}
+);
+
+test(
+	'an object with valueOf is equated with the number and its string form',
+	() => {
+		const { examples } = giveExamples({ valueOf: () => 5 });
+
+		assert.ok(examples.includes(5));
+		assert.ok(examples.includes('5'));
+		assert.ok(!examples.includes('[object Object]'));
+	}
+);
+
+test(
+	'Symbol.toPrimitive is invoked on the object with the "default" hint',
+	() => {
+		let receiver;
+		let hint;
+		const object = {
+			[Symbol.toPrimitive](...args) {
+				receiver = this;
+				[hint] = args;
+
+				return '2';
+			}
+		};
+
+		const { examples } = giveExamples(object);
+
+		assert.equal(receiver, object);
+		assert.equal(hint, 'default');
+		assert.ok(examples.includes('2'));
+		assert.ok(examples.includes(2));
+	}
+);
+
+test(
+	'a Date is equated with its string form without needing a special case',
+	() => {
+		const date = new Date();
+
+		const { examples } = giveExamples(date);
+
+		assert.deepEqual(examples, [String(date)]);
+	}
+);
+
+test(
+	'object examples are finite and never contain other objects',
+	() => {
+		const objects = [{}, { valueOf: () => 1 }, { [Symbol.toPrimitive]: () => '1' }, new Date()];
+
+		for (const object of objects) {
+			const { isInfinite, examples } = giveExamples(object);
+
+			assert.equal(isInfinite, false);
+			assert.ok(examples.every((example) => Object(example) !== example));
+		}
+	}
+);
+
+test(
+	'an object with no way to coerce is equated with nothing',
+	() => {
+		const { examples } = giveExamples(Object.create(null));
+
+		assert.deepEqual(examples, []);
+	}
+);
+
+test(
+	'every object example is actually loosely equal to the object',
+	() => {
+		const objects = [{}, { valueOf: () => 5 }, { toString: () => '1' }, { [Symbol.toPrimitive]: () => 0 }, new Date()];
+
+		for (const object of objects) {
+			const { examples } = giveExamples(object);
+
+			assert.ok(examples.length > 0);
+			assert.ok(examples.every((example) => example == object));
+		}
+	}
+);

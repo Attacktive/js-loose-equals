@@ -214,32 +214,37 @@ function handleArray(array) {
 }
 
 /**
+ * An object operand of `==` is only ever compared through its ToPrimitive coercion, so its examples are the primitive values loosely equal to that coercion; other objects never qualify since they are compared by reference.
  * @param {Object} object
  * @return {Example}
  */
 function handleObject(object) {
-	const toPrimitive = object[Symbol.toPrimitive];
-	if (typeof toPrimitive === 'function') {
-		try {
-			const primitive = toPrimitive();
-			return giveExamples(primitive);
-		} catch (error) {
-			console.trace('Failed to invoke Symbol.toPrimitive.', error);
+	let primitive;
 
-			if (object instanceof Date) {
-				return {
-					isInfinite: true,
-					examples: generateObjectWrappedArrayUpToNTimes(object, 10)
-				};
-			}
+	try {
+		primitive = coerceToPrimitive(object);
+	} catch (error) {
+		console.trace('Failed to coerce the object into a primitive value.', error);
 
-			// anything else?
-		}
+		return {
+			isInfinite: false,
+			examples: []
+		};
 	}
+
+	// `==` compares null and undefined to objects without coercing, so an object whose primitive is null or undefined equals nothing
+	if (primitive === undefined || primitive === null) {
+		return {
+			isInfinite: false,
+			examples: []
+		};
+	}
+
+	const { examples } = giveExamples(primitive);
 
 	return {
 		isInfinite: false,
-		examples: []
+		examples: [...new Set(examples.filter(isPrimitive))]
 	};
 }
 
@@ -276,6 +281,44 @@ function tryParsingToNumber(string) {
 	}
 
 	return parsed;
+}
+
+/**
+ * Emulates how `==` coerces its object operand: Symbol.toPrimitive with the 'default' hint when present, otherwise valueOf then toString.
+ * {@link https://262.ecma-international.org/#sec-toprimitive}
+ * @param {Object} object
+ * @return {undefined|null|boolean|number|bigint|string|symbol}
+ */
+function coerceToPrimitive(object) {
+	const toPrimitive = object[Symbol.toPrimitive];
+	if (typeof toPrimitive === 'function') {
+		const primitive = toPrimitive.call(object, 'default');
+		if (isPrimitive(primitive)) {
+			return primitive;
+		}
+
+		throw TypeError('Symbol.toPrimitive returned a non-primitive value.');
+	}
+
+	for (const name of ['valueOf', 'toString']) {
+		const method = object[name];
+		if (typeof method === 'function') {
+			const candidate = method.call(object);
+			if (isPrimitive(candidate)) {
+				return candidate;
+			}
+		}
+	}
+
+	throw TypeError('Cannot convert the object to a primitive value.');
+}
+
+/**
+ * @param any
+ * @return {boolean}
+ */
+function isPrimitive(any) {
+	return Object(any) !== any;
 }
 
 /**
