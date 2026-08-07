@@ -67,7 +67,7 @@ function giveExamples(x) {
 
 /**
  * @param x
- * @return {Example}
+ * @return {Example|undefined}
  */
 function handleSpecialCases(x) {
 	if (Number.isNaN(x)) {
