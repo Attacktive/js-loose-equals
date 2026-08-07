@@ -1,3 +1,5 @@
+/* exported format */
+
 /**
  * @typedef Input
  * @type {undefined|null|boolean|number|bigint|symbol|string|Date|Object}
