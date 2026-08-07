@@ -186,25 +186,31 @@ function handleSpecialCases(x) {
 }
 
 /**
+ * Under `==` an array coerces via ToPrimitive to `String(array)`, so it is loosely equal to that string, to the number the string parses to (if any), and to the boolean whose numeric value matches.
  * @param {Array} array
  * @return {Example}
  */
 function handleArray(array) {
-	const isInfinite = false;
+	const string = String(array);
+	const parsed = tryParsingToNumber(string);
+	const examples = [];
 
-	if (isNestedEmptyArray(array)) {
-		return { isInfinite, examples: [false, 0, ''] };
+	if (parsed === 0) {
+		examples.push(false);
+	} else if (parsed === 1) {
+		examples.push(true);
 	}
 
-	if (isNestedSingletonOf(0, array)) {
-		return { isInfinite, examples: [false, 0, '0'] };
+	if (parsed !== undefined) {
+		examples.push(parsed);
 	}
 
-	if (isNestedSingletonOf(1, array)) {
-		return { isInfinite, examples: [true, 1, '1'] };
-	}
+	examples.push(string);
 
-	return { isInfinite, examples: [] };
+	return {
+		isInfinite: false,
+		examples
+	};
 }
 
 /**
@@ -270,44 +276,6 @@ function tryParsingToNumber(string) {
 	}
 
 	return parsed;
-}
-
-/**
- * @param {Array} array
- * @return {boolean}
- */
-function isNestedEmptyArray(array) {
-	if (!Array.isArray(array)) {
-		return false;
-	}
-	if (array.length === 0) {
-		return true;
-	}
-	if (array.length > 1) {
-		return false;
-	}
-
-	const theOnlyElement = array[0];
-	return isNestedEmptyArray(theOnlyElement);
-}
-
-/**
- * @param {number} target
- * @param {Array} array
- * @return {boolean}
- */
-function isNestedSingletonOf(target, array) {
-	if (array.length !== 1) {
-		return false;
-	}
-
-	const theOnlyElement = array[0];
-	if (Array.isArray(theOnlyElement)) {
-		return isNestedSingletonOf(target, theOnlyElement);
-	} else {
-		const parsed = Number(theOnlyElement);
-		return (parsed === target);
-	}
 }
 
 /**
